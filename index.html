@@ -10,8 +10,7 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(
 .wrap{max-width:760px;margin:auto;padding:18px}
 .card{background:rgba(255,255,255,.94);border-radius:28px;padding:20px;box-shadow:0 10px 30px rgba(70,50,100,.15);border:4px solid #fff}
 .header{text-align:center}
-.header .mascot{font-size:60px}
-.title{font-size:30px;font-weight:900;color:#7b4bb7;margin:4px}
+.header .mascot{font-size:60px;margin-bottom:4px}
 .progressRow{display:flex;justify-content:space-between;align-items:center;margin:14px 0;background:#f6efff;border-radius:18px;padding:10px 16px;font-weight:800;font-size:20px}
 .dots{display:flex;gap:6px;flex-wrap:wrap}
 .dot{width:14px;height:14px;border-radius:50%;background:#e3d6fb}
@@ -19,7 +18,6 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(
 .dot.current{background:#f3a51b}
 .stars{color:#f3a51b;font-size:22px}
 .targetWrap{text-align:center;margin:6px 0 18px}
-.targetLabel{font-size:15px;color:#a89bc2;font-weight:700;letter-spacing:1px}
 .target{font-size:110px;font-weight:900;color:#7b4bb7;line-height:1;text-shadow:0 4px 0 #eadfff}
 .choices{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:6px}
 .choice{position:relative;min-height:150px;border:5px solid #eadfff;border-radius:24px;background:#fff;cursor:pointer;box-shadow:0 6px 0 #e5d8f5;transition:.12s;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px}
@@ -30,9 +28,6 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(
 .choice.wrong{background:#fff0f0;border-color:#ff8a8a}
 .choice .mark{position:absolute;top:8px;right:10px;font-size:26px}
 .choice[disabled]{cursor:default}
-.nextRow{display:flex;justify-content:center;margin-top:22px;min-height:64px}
-.nextBtn{border:0;border-radius:50%;width:64px;height:64px;background:#7b4bb7;color:#fff;font-size:28px;cursor:pointer;box-shadow:0 5px 0 #5f3993}
-.nextBtn:active{transform:translateY(4px);box-shadow:0 1px 0 #5f3993}
 .hidden{display:none!important}
 .end{text-align:center}
 .end .trophy{font-size:80px}
@@ -41,7 +36,6 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(
 @media(max-width:480px){
   .wrap{padding:10px}
   .card{padding:14px;border-radius:22px}
-  .title{font-size:25px}
   .target{font-size:90px}
   .choice{min-height:130px}
   .choice .pic{font-size:48px}
@@ -54,7 +48,6 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(
 
   <div class="header">
     <div class="mascot">🐱</div>
-    <div class="title">Catch the Letter C!</div>
   </div>
 
   <div class="progressRow">
@@ -64,11 +57,9 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(
 
   <div id="game">
     <div class="targetWrap">
-      <div class="targetLabel">FIND THIS LETTER</div>
       <div class="target" id="target">C</div>
     </div>
     <div class="choices" id="choices"></div>
-    <div class="nextRow" id="nextRow"></div>
   </div>
 
   <div id="end" class="end hidden">
@@ -134,7 +125,6 @@ function render(){
   $("starsLabel").textContent = `⭐ ${stars}`;
   const r = rounds[n];
   $("target").textContent = r.showLower ? "c" : "C";
-  $("nextRow").innerHTML = "";
   const choicesEl = $("choices");
   choicesEl.innerHTML = "";
   r.options.forEach(opt=>{
@@ -166,11 +156,7 @@ function answer(btn, letter){
   }
   $("starsLabel").textContent = `⭐ ${stars}`;
   [...$("choices").children].forEach(c=>c.setAttribute("disabled","true"));
-  const nb = document.createElement("button");
-  nb.className = "nextBtn";
-  nb.innerHTML = "➡️";
-  nb.onclick = () => { n++; if(n>=ROUNDS){ finish(); } else { render(); } };
-  $("nextRow").appendChild(nb);
+  setTimeout(()=>{ n++; if(n>=ROUNDS){ finish(); } else { render(); } }, 5000);
 }
 
 function finish(){
