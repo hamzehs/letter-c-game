@@ -5,54 +5,192 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Catch the Letter C!</title>
 <style>
-*{box-sizing:border-box} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#ffe7f2,#e8e1ff,#dff7ff);min-height:100vh;color:#3b3154}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#ffe7f2,#e8e1ff,#dff7ff);min-height:100vh;color:#3b3154}
 .wrap{max-width:760px;margin:auto;padding:18px}
 .card{background:rgba(255,255,255,.94);border-radius:28px;padding:20px;box-shadow:0 10px 30px rgba(70,50,100,.15);border:4px solid #fff}
-.header{text-align:center}.header .cat{font-size:64px}.title{font-size:32px;font-weight:900;color:#7b4bb7;margin:4px}.sub{font-size:17px;color:#766b87}
-.progress{display:flex;justify-content:space-between;align-items:center;margin:14px 0;background:#f6efff;border-radius:18px;padding:10px 14px;font-weight:800}.stars{color:#f3a51b}
-.question{text-align:center;padding:12px}.instruction{font-size:22px;font-weight:900;color:#55506b;margin:8px}.visual{font-size:82px;line-height:1.05;margin:12px}.choices{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:15px}
-.choice{min-height:92px;border:4px solid #eadfff;border-radius:22px;background:#fff;cursor:pointer;font-size:25px;font-weight:900;color:#55436f;box-shadow:0 5px 0 #e5d8f5;transition:.12s}
-.choice:active{transform:translateY(4px);box-shadow:0 1px 0 #e5d8f5}.choice.correct{background:#e5f9e9;border-color:#6acb88}.choice.wrong{background:#fff0f0;border-color:#ff9b9b}
-.feedback{min-height:42px;margin:15px 0 5px;font-size:21px;font-weight:900}.next{border:0;border-radius:18px;background:#7b4bb7;color:white;padding:14px 28px;font-size:19px;font-weight:900;cursor:pointer}
-.hidden{display:none}.end{text-align:center}.end .trophy{font-size:75px}.end h2{font-size:30px;color:#7b4bb7;margin:8px}.end p{font-size:20px}
-@media(max-width:480px){.wrap{padding:10px}.card{padding:15px;border-radius:24px}.title{font-size:27px}.visual{font-size:70px}.choices{gap:10px}.choice{min-height:82px;font-size:22px}}
+.header{text-align:center}
+.header .mascot{font-size:60px}
+.title{font-size:30px;font-weight:900;color:#7b4bb7;margin:4px}
+.progressRow{display:flex;justify-content:space-between;align-items:center;margin:14px 0;background:#f6efff;border-radius:18px;padding:10px 16px;font-weight:800;font-size:20px}
+.dots{display:flex;gap:6px;flex-wrap:wrap}
+.dot{width:14px;height:14px;border-radius:50%;background:#e3d6fb}
+.dot.done{background:#7b4bb7}
+.dot.current{background:#f3a51b}
+.stars{color:#f3a51b;font-size:22px}
+.targetWrap{text-align:center;margin:6px 0 18px}
+.targetLabel{font-size:15px;color:#a89bc2;font-weight:700;letter-spacing:1px}
+.target{font-size:110px;font-weight:900;color:#7b4bb7;line-height:1;text-shadow:0 4px 0 #eadfff}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:6px}
+.choice{position:relative;min-height:150px;border:5px solid #eadfff;border-radius:24px;background:#fff;cursor:pointer;box-shadow:0 6px 0 #e5d8f5;transition:.12s;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px}
+.choice .pic{font-size:56px;line-height:1}
+.choice .letter{font-size:34px;font-weight:900;color:#55436f;margin-top:4px}
+.choice:active{transform:translateY(5px);box-shadow:0 1px 0 #e5d8f5}
+.choice.correct{background:#e5f9e9;border-color:#54c17a}
+.choice.wrong{background:#fff0f0;border-color:#ff8a8a}
+.choice .mark{position:absolute;top:8px;right:10px;font-size:26px}
+.choice[disabled]{cursor:default}
+.nextRow{display:flex;justify-content:center;margin-top:22px;min-height:64px}
+.nextBtn{border:0;border-radius:50%;width:64px;height:64px;background:#7b4bb7;color:#fff;font-size:28px;cursor:pointer;box-shadow:0 5px 0 #5f3993}
+.nextBtn:active{transform:translateY(4px);box-shadow:0 1px 0 #5f3993}
+.hidden{display:none!important}
+.end{text-align:center}
+.end .trophy{font-size:80px}
+.end .starsBig{font-size:34px;margin:10px 0;color:#f3a51b;line-height:1.3}
+.again{border:0;border-radius:18px;background:#7b4bb7;color:#fff;padding:16px 30px;font-size:24px;font-weight:900;cursor:pointer;margin-top:10px}
+@media(max-width:480px){
+  .wrap{padding:10px}
+  .card{padding:14px;border-radius:22px}
+  .title{font-size:25px}
+  .target{font-size:90px}
+  .choice{min-height:130px}
+  .choice .pic{font-size:48px}
+  .choice .letter{font-size:28px}
+}
 </style>
 </head>
 <body>
 <div class="wrap"><div class="card">
-<div class="header"><div class="cat">🐱</div><div class="title">Catch the Letter C!</div><div class="sub">Let's learn C and c together! 🌈</div></div>
-<div class="progress"><span id="round">Question 1 of 8</span><span class="stars" id="score">⭐ 0</span></div>
-<div id="game">
-<div class="question"><div class="instruction" id="instruction"></div><div class="visual" id="visual"></div><div class="choices" id="choices"></div><div class="feedback" id="feedback"></div><button class="next hidden" id="next">Next ➜</button></div>
-</div>
-<div id="end" class="end hidden"><div class="trophy">🏆</div><h2>Great Job!</h2><p id="final"></p><button class="next" id="again">Play Again 🔄</button></div>
+
+  <div class="header">
+    <div class="mascot">🐱</div>
+    <div class="title">Catch the Letter C!</div>
+  </div>
+
+  <div class="progressRow">
+    <div class="dots" id="dots"></div>
+    <div class="stars" id="starsLabel">⭐ 0</div>
+  </div>
+
+  <div id="game">
+    <div class="targetWrap">
+      <div class="targetLabel">FIND THIS LETTER</div>
+      <div class="target" id="target">C</div>
+    </div>
+    <div class="choices" id="choices"></div>
+    <div class="nextRow" id="nextRow"></div>
+  </div>
+
+  <div id="end" class="end hidden">
+    <div class="trophy">🏆</div>
+    <div class="starsBig" id="finalStars"></div>
+    <button class="again" id="again">🔄</button>
+  </div>
+
 </div></div>
+
 <script>
-const qs=[
-{q:"Find the letter C!",v:"🔤",a:[["A",0],["C",1],["B",0],["D",0]]},
-{q:"Find the lowercase c!",v:"🔤",a:[["a",0],["c",1],["b",0],["d",0]]},
-{q:"Which word starts with C?",v:"🐱",a:[["Cat",1],["Dog",0],["Fish",0],["Sun",0]]},
-{q:"Which word starts with C?",v:"🍰",a:[["Cake",1],["Apple",0],["Ball",0],["Fish",0]]},
-{q:"Which word starts with C?",v:"🚗",a:[["Car",1],["Bus",0],["Hat",0],["Sun",0]]},
-{q:"Which word starts with C?",v:"🐄",a:[["Cow",1],["Dog",0],["Lion",0],["Fish",0]]},
-{q:"Which picture starts with C?",v:"🧢",a:[["Cap",1],["Hat",0],["Shoe",0],["Bag",0]]},
-{q:"Which picture starts with C?",v:"☕",a:[["Cup",1],["Pen",0],["Book",0],["Ball",0]]}
-];
-let n=0,score=0,locked=false;
-const $=id=>document.getElementById(id);
+// Every round the correct answer is the letter C. The picture on the C
+// card rotates through several C words so it stays visually interesting;
+// nothing needs to be read to play - only letter shapes and pictures.
+const C_PICS = ["🐱","🐄","🚗","☕","🎂","🧀","🥕","🕯️"];
+
+// Distractor letters + their pictures (never the answer, just decoys)
+const OTHER_PICS = {
+  A:"🍎", B:"⚽", D:"🦆", E:"🥚", F:"🐟", G:"🍇", H:"🏠",
+  I:"🍦", J:"🧃", K:"🔑", L:"🦁", M:"🌙", N:"🥜", O:"🐙", P:"🐷",
+  Q:"👑", R:"🐰", S:"☀️", T:"🐯", U:"☂️", V:"🎻", W:"🐋", X:"🦊",
+  Y:"🪀", Z:"🦓"
+};
+const OTHER_LETTERS = Object.keys(OTHER_PICS);
+const ROUNDS = 8;
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+const cPicOrder = shuffle(C_PICS);
+const rounds = [];
+for(let i=0;i<ROUNDS;i++){
+  const distractors = shuffle(OTHER_LETTERS).slice(0,3);
+  const options = shuffle([
+    { letter:"C", pic: cPicOrder[i % cPicOrder.length] },
+    ...distractors.map(l=>({ letter:l, pic: OTHER_PICS[l] }))
+  ]);
+  rounds.push({ showLower: Math.random() < 0.5, options });
+}
+
+let n = 0, stars = 0, locked = false;
+const $ = id => document.getElementById(id);
+
+function renderDots(){
+  const dots = $("dots");
+  dots.innerHTML = "";
+  for(let i=0;i<ROUNDS;i++){
+    const d = document.createElement("div");
+    d.className = "dot" + (i<n ? " done" : (i===n ? " current" : ""));
+    dots.appendChild(d);
+  }
+}
+
 function render(){
- locked=false; const x=qs[n]; $("round").textContent=`Question ${n+1} of ${qs.length}`; $("score").textContent=`⭐ ${score}`;
- $("instruction").textContent=x.q;$("visual").textContent=x.v;$("feedback").textContent="";$("next").classList.add("hidden");
- $("choices").innerHTML="";
- x.a.forEach(([label,ok])=>{const b=document.createElement("button");b.className="choice";b.textContent=label;b.onclick=()=>answer(b,ok);$("choices").appendChild(b)});
+  locked = false;
+  renderDots();
+  $("starsLabel").textContent = `⭐ ${stars}`;
+  const r = rounds[n];
+  $("target").textContent = r.showLower ? "c" : "C";
+  $("nextRow").innerHTML = "";
+  const choicesEl = $("choices");
+  choicesEl.innerHTML = "";
+  r.options.forEach(opt=>{
+    const btn = document.createElement("button");
+    btn.className = "choice";
+    btn.innerHTML = `<span class="pic">${opt.pic}</span><span class="letter">${opt.letter}</span>`;
+    btn.onclick = () => answer(btn, opt.letter);
+    choicesEl.appendChild(btn);
+  });
 }
-function answer(btn,ok){
- if(locked)return; locked=true;
- if(ok){score++;btn.classList.add("correct");$("feedback").textContent="🎉 Excellent! Great job!";}else{btn.classList.add("wrong");$("feedback").textContent="💡 Good try! The correct answer is the C one."}
- $("score").textContent=`⭐ ${score}`; $("next").classList.remove("hidden");
+
+function answer(btn, letter){
+  if(locked) return;
+  locked = true;
+  const ok = letter === "C";
+  if(ok){
+    stars++;
+    btn.classList.add("correct");
+    btn.innerHTML += `<span class="mark">✅</span>`;
+  } else {
+    btn.classList.add("wrong");
+    btn.innerHTML += `<span class="mark">❌</span>`;
+    [...$("choices").children].forEach(c=>{
+      if(c.querySelector(".letter").textContent === "C"){
+        c.classList.add("correct");
+        c.innerHTML += `<span class="mark">✅</span>`;
+      }
+    });
+  }
+  $("starsLabel").textContent = `⭐ ${stars}`;
+  [...$("choices").children].forEach(c=>c.setAttribute("disabled","true"));
+  const nb = document.createElement("button");
+  nb.className = "nextBtn";
+  nb.innerHTML = "➡️";
+  nb.onclick = () => { n++; if(n>=ROUNDS){ finish(); } else { render(); } };
+  $("nextRow").appendChild(nb);
 }
-$("next").onclick=()=>{n++;if(n>=qs.length){$("game").classList.add("hidden");$("end").classList.remove("hidden");$("final").textContent=`You got ${score} out of ${qs.length}! 🌟 Keep practicing the letter C!`;}else render()};
-$("again").onclick=()=>{n=0;score=0;$("end").classList.add("hidden");$("game").classList.remove("hidden");render()};
+
+function finish(){
+  renderDots();
+  $("game").classList.add("hidden");
+  $("end").classList.remove("hidden");
+  $("finalStars").textContent = "⭐".repeat(stars) + "☆".repeat(ROUNDS-stars);
+}
+
+$("again").onclick = () => {
+  n = 0; stars = 0;
+  $("end").classList.add("hidden");
+  $("game").classList.remove("hidden");
+  rounds.forEach(r=>{
+    r.options = shuffle(r.options);
+    r.showLower = Math.random() < 0.5;
+  });
+  render();
+};
+
 render();
 </script>
 </body>
