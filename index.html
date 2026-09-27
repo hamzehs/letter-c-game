@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Catch the Letter C!</title>
+<style>
+*{box-sizing:border-box} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#ffe7f2,#e8e1ff,#dff7ff);min-height:100vh;color:#3b3154}
+.wrap{max-width:760px;margin:auto;padding:18px}
+.card{background:rgba(255,255,255,.94);border-radius:28px;padding:20px;box-shadow:0 10px 30px rgba(70,50,100,.15);border:4px solid #fff}
+.header{text-align:center}.header .cat{font-size:64px}.title{font-size:32px;font-weight:900;color:#7b4bb7;margin:4px}.sub{font-size:17px;color:#766b87}
+.progress{display:flex;justify-content:space-between;align-items:center;margin:14px 0;background:#f6efff;border-radius:18px;padding:10px 14px;font-weight:800}.stars{color:#f3a51b}
+.question{text-align:center;padding:12px}.instruction{font-size:22px;font-weight:900;color:#55506b;margin:8px}.visual{font-size:82px;line-height:1.05;margin:12px}.choices{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:15px}
+.choice{min-height:92px;border:4px solid #eadfff;border-radius:22px;background:#fff;cursor:pointer;font-size:25px;font-weight:900;color:#55436f;box-shadow:0 5px 0 #e5d8f5;transition:.12s}
+.choice:active{transform:translateY(4px);box-shadow:0 1px 0 #e5d8f5}.choice.correct{background:#e5f9e9;border-color:#6acb88}.choice.wrong{background:#fff0f0;border-color:#ff9b9b}
+.feedback{min-height:42px;margin:15px 0 5px;font-size:21px;font-weight:900}.next{border:0;border-radius:18px;background:#7b4bb7;color:white;padding:14px 28px;font-size:19px;font-weight:900;cursor:pointer}
+.hidden{display:none}.end{text-align:center}.end .trophy{font-size:75px}.end h2{font-size:30px;color:#7b4bb7;margin:8px}.end p{font-size:20px}
+@media(max-width:480px){.wrap{padding:10px}.card{padding:15px;border-radius:24px}.title{font-size:27px}.visual{font-size:70px}.choices{gap:10px}.choice{min-height:82px;font-size:22px}}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="card">
+<div class="header"><div class="cat">🐱</div><div class="title">Catch the Letter C!</div><div class="sub">Let's learn C and c together! 🌈</div></div>
+<div class="progress"><span id="round">Question 1 of 8</span><span class="stars" id="score">⭐ 0</span></div>
+<div id="game">
+<div class="question"><div class="instruction" id="instruction"></div><div class="visual" id="visual"></div><div class="choices" id="choices"></div><div class="feedback" id="feedback"></div><button class="next hidden" id="next">Next ➜</button></div>
+</div>
+<div id="end" class="end hidden"><div class="trophy">🏆</div><h2>Great Job!</h2><p id="final"></p><button class="next" id="again">Play Again 🔄</button></div>
+</div></div>
+<script>
+const qs=[
+{q:"Find the letter C!",v:"🔤",a:[["A",0],["C",1],["B",0],["D",0]]},
+{q:"Find the lowercase c!",v:"🔤",a:[["a",0],["c",1],["b",0],["d",0]]},
+{q:"Which word starts with C?",v:"🐱",a:[["Cat",1],["Dog",0],["Fish",0],["Sun",0]]},
+{q:"Which word starts with C?",v:"🍰",a:[["Cake",1],["Apple",0],["Ball",0],["Fish",0]]},
+{q:"Which word starts with C?",v:"🚗",a:[["Car",1],["Bus",0],["Hat",0],["Sun",0]]},
+{q:"Which word starts with C?",v:"🐄",a:[["Cow",1],["Dog",0],["Lion",0],["Fish",0]]},
+{q:"Which picture starts with C?",v:"🧢",a:[["Cap",1],["Hat",0],["Shoe",0],["Bag",0]]},
+{q:"Which picture starts with C?",v:"☕",a:[["Cup",1],["Pen",0],["Book",0],["Ball",0]]}
+];
+let n=0,score=0,locked=false;
+const $=id=>document.getElementById(id);
+function render(){
+ locked=false; const x=qs[n]; $("round").textContent=`Question ${n+1} of ${qs.length}`; $("score").textContent=`⭐ ${score}`;
+ $("instruction").textContent=x.q;$("visual").textContent=x.v;$("feedback").textContent="";$("next").classList.add("hidden");
+ $("choices").innerHTML="";
+ x.a.forEach(([label,ok])=>{const b=document.createElement("button");b.className="choice";b.textContent=label;b.onclick=()=>answer(b,ok);$("choices").appendChild(b)});
+}
+function answer(btn,ok){
+ if(locked)return; locked=true;
+ if(ok){score++;btn.classList.add("correct");$("feedback").textContent="🎉 Excellent! Great job!";}else{btn.classList.add("wrong");$("feedback").textContent="💡 Good try! The correct answer is the C one."}
+ $("score").textContent=`⭐ ${score}`; $("next").classList.remove("hidden");
+}
+$("next").onclick=()=>{n++;if(n>=qs.length){$("game").classList.add("hidden");$("end").classList.remove("hidden");$("final").textContent=`You got ${score} out of ${qs.length}! 🌟 Keep practicing the letter C!`;}else render()};
+$("again").onclick=()=>{n=0;score=0;$("end").classList.add("hidden");$("game").classList.remove("hidden");render()};
+render();
+</script>
+</body>
+</html>
